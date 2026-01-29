@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Note For You ❤️</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Dancing+Script:wght@600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #2c1e14;
+            background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px; /* Mobilde kenarlardan biraz boşluk olsun */
+        }
+
+        .letter-container {
+            max-width: 700px;
+            width: 90%; /* Mobilde ekranın %90'ını kaplasın */
+            background-color: #f4e1c1;
+            background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+            
+            /* Masaüstü için varsayılan boşluk */
+            padding: 50px; 
+            
+            box-shadow: 
+                0 1px 4px rgba(0,0,0,0.3),
+                0 0 40px rgba(0,0,0,0.1) inset;
+            
+            border-radius: 2px;
+            border: 1px solid #d4c1a1;
+            position: relative;
+            animation: slideUp 1.5s ease-out;
+            
+            /* Kutunun boyu ekranı taşmasın */
+            box-sizing: border-box; 
+        }
+
+        .letter-container::after {
+            margin-top: 30px;
+            margin-bottom: 0;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            color: #5d4037;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+
+        p {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #3e2723;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            text-align: right;
+            color: #5d4037;
+            margin-top: 20px;
+        }
+
+        .next-btn {
+            display: block;
+            margin: 30px auto 0 auto;
+            padding: 15px 40px;
+            background-color: #795548;
+            color: #f4e1c1;
+            text-decoration: none;
+            border-radius: 30px;
+            font-family: 'Cinzel Decorative', cursive;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            border: 2px solid #5d4037;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            width: fit-content;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            background-color: #5d4037;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            color: #fff;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MOBİL UYUMLULUK AYARLARI --- */
+        @media (max-width: 600px) {
+            .letter-container {
+                padding: 25px; /* Mobilde iç boşluğu azalttık */
+                width: 95%; /* Genişliği artırdık */
+            }
+
+            h1 {
+                font-size: 1.8rem; /* Başlığı biraz küçülttük */
+                margin-bottom: 20px;
+            }
+
+            p {
+                font-size: 1rem; /* Yazı boyutu telefonda ideal boyutta */
+                line-height: 1.6;
+            }
+
+            .letter-container::before, .letter-container::after {
+                font-size: 1.5rem; /* Süslemeleri küçülttük */
+            }
+
+            .next-btn {
+                padding: 12px 30px; /* Butonu ekrana sığdırdık */
+                width: 100%; /* Buton mobilde tam genişlikte olsun */
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="letter-container">
+        <p>
+           First of all i was planning to show this atttt valalalaentinesnesssss but since i js wanted to make u feel better i decided to show it now.
+        <p>
+            Thanks for being with me all the time at my lowest or when im happy or everything orrr even if i be so stupid and weird but its all because of my fear of losing you yk i dont want to lose ya i know im not enough but still im trying my best for u everyday so sometimes i act like that i hope u understand me.
+        </p>
+        <p>
+            Thanks for making everything better.
+        </p>
+        <a href="forsara/index.html" class="next-btn">click here!!</a>
+    </div>
+
+</body>
+</html>
