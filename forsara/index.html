@@ -218,40 +218,53 @@
         }
         
         /* --- DÜZELTİLMİŞ MOBİL GÖRÜNÜM --- */
+        /* --- MOBİL İÇİN ÖZEL AYARLAR (DÜZELTİLMİŞ) --- */
         @media (max-width: 768px) {
-            .album-block { flex-direction: column; }
-            
-            /* Player yüksekliğini otomatiğe aldık, içindekilere göre uzasın */
-            .player-bar { 
-                height: auto; 
-                min-height: 160px; /* Biraz daha yer açtık */
-                flex-direction: column; 
-                padding: 15px; 
-                justify-content: space-between;
-                gap: 10px;
+            /* Sayfa genişliğini telefona zorla sığdır */
+            body, html { 
+                max-width: 100vw; 
+                overflow-x: hidden; 
             }
 
+            .container { padding: 15px; } /* Kenar boşluklarını azalt */
+            
+            /* Albüm kapağı ve liste mobilde alt alta olsun */
+            .album-block { flex-direction: column; }
+            .album-overview { width: 100%; }
+
+            /* --- PLAYER BAR DÜZENİ --- */
+            .player-bar { 
+                height: auto; 
+                min-height: 120px; /* Daha kompakt yükseklik */
+                flex-direction: column; 
+                padding: 10px 15px; 
+                justify-content: center;
+                gap: 10px;
+                bottom: 0; /* En alta yapıştır */
+            }
+
+            /* Mobilde sol taraf (Resim ve İsim) */
             .player-left { 
                 width: 100%; 
                 margin-bottom: 5px; 
-                justify-content: center; /* Yazıları ortala */
+                justify-content: flex-start; /* Sola yasla */
             }
+            
+            /* Şarkı ismi mobilde kaymasın diye sınırla */
+            .player-info { max-width: 70%; }
 
+            /* Kontroller (Play, İleri, Geri) */
             .player-center { 
                 width: 100%; 
                 margin-bottom: 5px; 
             }
             
-            /* Sesi geri getirdik! */
-            .player-right { 
-                display: flex; 
-                width: 100%; 
-                justify-content: center; /* Ortaya al */
-                padding-bottom: 10px;
-            }
+            /* Ses ayarını mobilde gizle (yer kaplamasın) */
+            .player-right { display: none; } 
             
-            /* Mobilde ses çubuğunu biraz kısaltalım ki taşmasın */
-            #volBar { width: 60%; }
+            /* Butonları biraz büyüt parmakla basılsın */
+            .btn-ctrl svg { width: 28px; height: 28px; }
+            .play-btn-circle { width: 45px; height: 45px; }
         }
         .progress-container:hover input[type=range]::-webkit-slider-thumb { display: block; }
         
@@ -270,6 +283,8 @@
             align-items: center; 
             gap: 20px;
         }
+
+        
         /* Kaydırma çubuğu makyajı */
 .album-tracks::-webkit-scrollbar { width: 8px; }
 .album-tracks::-webkit-scrollbar-track { background: #181818; }
@@ -349,6 +364,7 @@
         let currentArtistName = '';
         let allSongs = []; 
         let lastVolume = 1; 
+        let currentTrackIndex = -1;
 
         audio.volume = 1.0; 
 
@@ -453,14 +469,18 @@
             element.classList.toggle('expanded');
         }
 
-        function playTrack(title, artist, file, cover, el) {
+        function playTrack(title, artist, file, cover, event) {
             if(event) event.stopPropagation();
 
             const searchInput = document.getElementById('searchInput');
-            if (searchInput.value !== '') {
+            if (searchInput && searchInput.value !== '') {
                 searchInput.value = '';
                 document.getElementById('searchResults').style.display = 'none';
             }
+
+            // --- YENİ KISIM: Şarkının listedeki sırasını bul ---
+            // Dosya yolundaki özel karakterleri temizleyip karşılaştırıyoruz
+            currentTrackIndex = allSongs.findIndex(s => s.file === file || s.file.replace(/'/g, "\\'") === file);
 
             currentArtistName = artist;
             document.getElementById('playerTitle').innerText = title;
@@ -469,7 +489,10 @@
             document.getElementById('playerArt').style.display = 'block';
             document.getElementById('playerBar').classList.add('active');
 
-            audio.src = file;
+            // Tarayıcının tanıması için encodeURI kullanıyoruz
+            let safeSrc = encodeURI(file).replace(/#/g, '%23');
+            audio.src = safeSrc;
+            
             audio.load();
             togglePlay(true);
         }
@@ -491,19 +514,44 @@
             if(forceStart || !isPlaying) {
                 audio.play().then(() => {
                     isPlaying = true;
+                    // Pause İkonu
                     btn.innerHTML = `<svg class="icon-lg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
                     updateTimer = setInterval(updateLoop, 200);
                 }).catch(e => { console.error(e); });
             } else {
                 audio.pause();
                 isPlaying = false;
+                // Play İkonu
                 btn.innerHTML = `<svg class="icon-lg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
                 clearInterval(updateTimer);
             }
         }
 
-        function prevSong() { audio.currentTime = 0; }
-        function nextSong() { audio.currentTime = 0; audio.pause(); isPlaying = false; togglePlay(false); }
+        function nextSong() {
+            if (currentTrackIndex < allSongs.length - 1) {
+                currentTrackIndex++;
+            } else {
+                currentTrackIndex = 0; // Liste bittiyse başa dön
+            }
+            loadTrackByIndex();
+        }
+
+        function prevSong() {
+            if (currentTrackIndex > 0) {
+                currentTrackIndex--;
+            } else {
+                currentTrackIndex = allSongs.length - 1; // En başsa en sona git
+            }
+            loadTrackByIndex();
+        }
+
+        // Yardımcı Fonksiyon (Şarkıyı yükler)
+        function loadTrackByIndex() {
+            let song = allSongs[currentTrackIndex];
+            // playTrack fonksiyonunu parametrelerle çağırıyoruz
+            // safeTitle vb. oluşturmaya gerek yok, direkt veriden alıyoruz
+            playTrack(song.title, song.artistName, song.file, song.albumCover, null);
+        }
         audio.onended = () => { audio.currentTime = 0; isPlaying = false; togglePlay(false); }
 
         function updateLoop() {
@@ -695,6 +743,7 @@
             });
         }
         form.addEventListener("submit", handleSubmit);
+        audio.onended = () => { nextSong(); };
     </script>
 </body>
 </html>
