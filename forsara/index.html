@@ -206,11 +206,52 @@
             height: 4px;
             background: #4f4f4f; border-radius: 2px; cursor: pointer; outline: none;
         }
+        /* --- DÜZELTİLMİŞ PLAY BAR ÇUBUKLARI (Mobilde görünür olsun) --- */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; 
             appearance: none; 
-            width: 12px; height: 12px;
-            background: var(--accent); border-radius: 50%; display: none;
+            width: 14px; height: 14px; /* Biraz büyüttük parmakla tutulsun */
+            background: var(--accent); 
+            border-radius: 50%; 
+            display: block; /* ARTIK HEP GÖRÜNÜR! */
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        
+        /* --- DÜZELTİLMİŞ MOBİL GÖRÜNÜM --- */
+        @media (max-width: 768px) {
+            .album-block { flex-direction: column; }
+            
+            /* Player yüksekliğini otomatiğe aldık, içindekilere göre uzasın */
+            .player-bar { 
+                height: auto; 
+                min-height: 160px; /* Biraz daha yer açtık */
+                flex-direction: column; 
+                padding: 15px; 
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .player-left { 
+                width: 100%; 
+                margin-bottom: 5px; 
+                justify-content: center; /* Yazıları ortala */
+            }
+
+            .player-center { 
+                width: 100%; 
+                margin-bottom: 5px; 
+            }
+            
+            /* Sesi geri getirdik! */
+            .player-right { 
+                display: flex; 
+                width: 100%; 
+                justify-content: center; /* Ortaya al */
+                padding-bottom: 10px;
+            }
+            
+            /* Mobilde ses çubuğunu biraz kısaltalım ki taşmasın */
+            #volBar { width: 60%; }
         }
         .progress-container:hover input[type=range]::-webkit-slider-thumb { display: block; }
         
@@ -228,13 +269,6 @@
             justify-content: flex-end; 
             align-items: center; 
             gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .album-block { flex-direction: column; }
-            .player-bar { height: 130px; flex-direction: column; padding: 15px; justify-content: center; }
-            .player-left { width: 100%; margin-bottom: 10px; }
-            .player-right { display: none; }
         }
         /* Kaydırma çubuğu makyajı */
 .album-tracks::-webkit-scrollbar { width: 8px; }
