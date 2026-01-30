@@ -220,51 +220,41 @@
         /* --- DÜZELTİLMİŞ MOBİL GÖRÜNÜM --- */
         /* --- MOBİL İÇİN ÖZEL AYARLAR (DÜZELTİLMİŞ) --- */
         @media (max-width: 768px) {
-            /* Sayfa genişliğini telefona zorla sığdır */
+            /* Tüm sayfayı telefona sığdır */
             body, html { 
-                max-width: 100vw; 
                 overflow-x: hidden; 
+                width: 100%;
             }
 
-            .container { padding: 15px; } /* Kenar boşluklarını azalt */
+            /* Kenar boşluklarını azalt (Sağ taraf kesilmesin diye) */
+            .container { 
+                padding: 10px; 
+                width: 100%;
+            }
+
+            .artist-card { padding: 15px; } /* Kart iç boşluğunu azalt */
             
             /* Albüm kapağı ve liste mobilde alt alta olsun */
             .album-block { flex-direction: column; }
-            .album-overview { width: 100%; }
+            .album-overview { width: 100%; padding: 10px;} /* Mobilde daralt */
 
-            /* --- PLAYER BAR DÜZENİ --- */
+            /* --- PLAYER BAR MOBİL AYARI --- */
             .player-bar { 
                 height: auto; 
-                min-height: 120px; /* Daha kompakt yükseklik */
+                min-height: 120px; 
                 flex-direction: column; 
-                padding: 10px 15px; 
-                justify-content: center;
-                gap: 10px;
-                bottom: 0; /* En alta yapıştır */
+                padding: 10px; /* Kenarlardan taşmasın */
+                bottom: 0;
+                width: 100%;
             }
 
-            /* Mobilde sol taraf (Resim ve İsim) */
-            .player-left { 
-                width: 100%; 
-                margin-bottom: 5px; 
-                justify-content: flex-start; /* Sola yasla */
-            }
+            .player-left { width: 100%; margin-bottom: 5px; justify-content: flex-start; }
+            .player-info { max-width: 80%; } /* İsim çok uzunsa sığdır */
             
-            /* Şarkı ismi mobilde kaymasın diye sınırla */
-            .player-info { max-width: 70%; }
-
-            /* Kontroller (Play, İleri, Geri) */
-            .player-center { 
-                width: 100%; 
-                margin-bottom: 5px; 
-            }
+            .player-center { width: 100%; margin-bottom: 5px; }
+            .controls { gap: 15px; } /* Butonları biraz yaklaştır */
             
-            /* Ses ayarını mobilde gizle (yer kaplamasın) */
-            .player-right { display: none; } 
-            
-            /* Butonları biraz büyüt parmakla basılsın */
-            .btn-ctrl svg { width: 28px; height: 28px; }
-            .play-btn-circle { width: 45px; height: 45px; }
+            .player-right { display: none; } /* Sesi mobilde gizle */
         }
         .progress-container:hover input[type=range]::-webkit-slider-thumb { display: block; }
         
@@ -293,12 +283,42 @@
     border-radius: 4px; 
 }
 .album-tracks::-webkit-scrollbar-thumb:hover { background-color: #1ed760; }
+/* --- SHUFFLE AKTİF OLUNCA YEŞİL OLSUN --- */
+        .btn-ctrl.active {
+            color: #1ed760 !important; /* Yazı/ikon rengi */
+            transform: scale(1.1);     /* Hafif büyüsün ki belli olsun */
+        }
+        
+        .btn-ctrl.active svg {
+            fill: #1ed760 !important;  /* SVG'nin içini de boya */
+            filter: drop-shadow(0 0 5px rgba(30, 215, 96, 0.5)); /* Hafif neon parlaması */
+        }
+       /* --- SAĞ ÜST KÖŞEDEKİ ÇİÇEK AYARI --- */
+        .header-gift {
+            position: absolute; /* Serbest hareket etsin */
+            right: 30px;        /* Sağdan 30px içeride olsun (mobilde de görünür) */
+            top: 50%;           /* Dikeyde ortala */
+            transform: translateY(-50%); /* Tam ortalamak için ince ayar */
+            
+            width: 50px;        /* Boyutu */
+            height: auto;
+            z-index: 200;       /* Her şeyin üstünde */
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); /* Hafif bir parlama */
+            pointer-events: none; /* Tıklamayı engellemesin */
+        }
+
+        /* Mobilde biraz küçültelim ki çok yer kaplamasın */
+        @media (max-width: 768px) {
+            .header-gift {
+                width: 40px;
+                right: 15px;
+            }
+        }
         
     </style>
 </head>
 <body data-theme="dark">
-
-    <div class="top-bar">
+<div class="top-bar">
         <div class="search-wrapper">
             <div class="search-inner">
                 <div class="search-icon-place">
@@ -308,6 +328,8 @@
             </div>
             <div id="searchResults" class="search-dropdown"></div>
         </div>
+
+        <img src="aa.png" class="header-gift" alt="Gift"> 
     </div>
 
     <div class="header-content" id="headerTitle">
@@ -329,6 +351,10 @@
 
         <div class="player-center">
             <div class="controls">
+                <button class="btn-ctrl" id="shuffleBtn" onclick="toggleShuffle()" title="Karışık Çal">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+                </button>
+
                 <button class="btn-ctrl" onclick="prevSong()">
                     <svg class="icon" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                 </button>
@@ -365,6 +391,7 @@
         let allSongs = []; 
         let lastVolume = 1; 
         let currentTrackIndex = -1;
+        let isShuffle = false; // Karışık çalma kapalı başlasın
 
         audio.volume = 1.0; 
 
@@ -383,6 +410,17 @@
             });
         }
                 
+        function toggleShuffle() {
+            isShuffle = !isShuffle;
+            const btn = document.getElementById('shuffleBtn');
+            if (isShuffle) {
+                btn.classList.add('active'); // Yeşil yap
+                btn.style.color = '#1ed760';
+            } else {
+                btn.classList.remove('active'); // Normale dön
+                btn.style.color = 'var(--text-sub)';
+            }
+        }
           
         
         function renderLibrary() {
@@ -472,28 +510,37 @@
         function playTrack(title, artist, file, cover, event) {
             if(event) event.stopPropagation();
 
+            // Arama varsa temizle
             const searchInput = document.getElementById('searchInput');
             if (searchInput && searchInput.value !== '') {
                 searchInput.value = '';
                 document.getElementById('searchResults').style.display = 'none';
             }
 
-            // --- YENİ KISIM: Şarkının listedeki sırasını bul ---
-            // Dosya yolundaki özel karakterleri temizleyip karşılaştırıyoruz
+            // Şu anki şarkı listesini güncelle (Shuffle için lazım)
+            // Eğer shuffle açıksa sıradaki şarkıyı rastgele seçeceğiz, burada sadece indexi buluyoruz.
             currentTrackIndex = allSongs.findIndex(s => s.file === file || s.file.replace(/'/g, "\\'") === file);
 
             currentArtistName = artist;
+            
+            // UI Güncellemeleri
             document.getElementById('playerTitle').innerText = title;
             document.getElementById('playerArtist').innerText = artist;
             document.getElementById('playerArt').src = cover;
             document.getElementById('playerArt').style.display = 'block';
             document.getElementById('playerBar').classList.add('active');
 
-            // Tarayıcının tanıması için encodeURI kullanıyoruz
+            // --- KASMA ÇÖZÜMÜ ---
+            // encodeURI yaparak dosya yolunu temizle
             let safeSrc = encodeURI(file).replace(/#/g, '%23');
-            audio.src = safeSrc;
             
-            audio.load();
+            // Eğer zaten bu şarkı çalıyorsa baştan başlatma
+            if (audio.src.includes(safeSrc) && isPlaying) return;
+
+            audio.src = safeSrc;
+            // audio.load();  <-- BU SATIRI SİLDİK (Kasmayı yapan buydu)
+            
+            // Promise ile oynat (Hata verirse konsola yazar ama siteyi dondurmaz)
             togglePlay(true);
         }
 
@@ -528,12 +575,21 @@
         }
 
         function nextSong() {
-            if (currentTrackIndex < allSongs.length - 1) {
-                currentTrackIndex++;
+            if (isShuffle) {
+                // RASTGELE BİR ŞARKI SEÇ
+                currentTrackIndex = Math.floor(Math.random() * allSongs.length);
             } else {
-                currentTrackIndex = 0; // Liste bittiyse başa dön
+                // NORMAL SIRADAN GİT
+                if (currentTrackIndex < allSongs.length - 1) {
+                    currentTrackIndex++;
+                } else {
+                    currentTrackIndex = 0; // Liste bittiyse başa dön
+                }
             }
-            loadTrackByIndex();
+            
+            // Şarkıyı yükle
+            let song = allSongs[currentTrackIndex];
+            playTrack(song.title, song.artistName, song.file, song.albumCover, null);
         }
 
         function prevSong() {
