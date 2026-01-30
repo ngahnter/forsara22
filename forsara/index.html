@@ -147,7 +147,10 @@
             max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
             background: rgba(0,0,0,0.2);
         }
-        .album-block.expanded .album-tracks { max-height: 2000px; } 
+        .album-block.expanded .album-tracks { 
+    max-height: 350px; /* Yükseklik sınırı koyduk */
+    overflow-y: auto;  /* Kaydırma çubuğunu açtık */
+} 
 
         .track-row {
             display: flex; align-items: center; padding: 12px 15px;
@@ -233,6 +236,15 @@
             .player-left { width: 100%; margin-bottom: 10px; }
             .player-right { display: none; }
         }
+        /* Kaydırma çubuğu makyajı */
+.album-tracks::-webkit-scrollbar { width: 8px; }
+.album-tracks::-webkit-scrollbar-track { background: #181818; }
+.album-tracks::-webkit-scrollbar-thumb { 
+    background-color: #444; 
+    border-radius: 4px; 
+}
+.album-tracks::-webkit-scrollbar-thumb:hover { background-color: #1ed760; }
+        
     </style>
 </head>
 <body data-theme="dark">
@@ -296,6 +308,7 @@
 
     <script src="data.js"></script>
     <script>
+        
         let audio = new Audio();
         let isPlaying = false;
         let updateTimer;
@@ -319,6 +332,8 @@
                 });
             });
         }
+                
+          
         
         function renderLibrary() {
             const container = document.getElementById('mainContainer');
