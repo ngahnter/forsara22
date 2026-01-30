@@ -294,25 +294,25 @@
             filter: drop-shadow(0 0 5px rgba(30, 215, 96, 0.5)); /* Hafif neon parlaması */
         }
        /* --- SAĞ ÜST KÖŞEDEKİ ÇİÇEK AYARI --- */
-        .header-gift {
-            position: absolute; /* Serbest hareket etsin */
-            right: 30px;        /* Sağdan 30px içeride olsun (mobilde de görünür) */
-            top: 50%;           /* Dikeyde ortala */
-            transform: translateY(-50%); /* Tam ortalamak için ince ayar */
-            
-            width: 50px;        /* Boyutu */
-            height: auto;
-            z-index: 200;       /* Her şeyin üstünde */
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); /* Hafif bir parlama */
-            pointer-events: none; /* Tıklamayı engellemesin */
+       /* --- MOBİLDE ÇİÇEK ÜST ÜSTE BİNMESİN DİYE EKLEME --- */
+
+        /* 1. Arama çubuğunu sağdan biraz içeri itiyoruz */
+        .search-wrapper {
+            /* Sağ tarafa 50px boşluk bırak, orası çiçeğin yeri olsun */
+            margin-right: 50px !important; 
+            width: auto !important; /* Genişliği serbest bırak sıkışmasın */
         }
 
-        /* Mobilde biraz küçültelim ki çok yer kaplamasın */
-        @media (max-width: 768px) {
-            .header-gift {
-                width: 40px;
-                right: 15px;
-            }
+        /* 2. Çiçeği o boşluğa tam oturtuyoruz */
+        .header-gift {
+            /* Dikey ortalamayı iptal et (üst üste binmesin diye) */
+            top: auto !important;
+            transform: none !important;
+            
+            /* Sağ üst köşeye sabitle */
+            top: 15px !important;  /* Yukarıdan biraz aşağıda */
+            right: 10px !important; /* Sağ kenara yakın */
+            width: 35px !important; /* Mobilde biraz daha kibar dursun */
         }
         
     </style>
@@ -324,7 +324,7 @@
                 <div class="search-icon-place">
                     <svg class="search-icon-svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
                 </div>
-                <input type="text" class="search-input" id="searchInput" placeholder="You can search the songs here" onkeyup="filterContent()">
+                <input type="text" class="search-input" id="searchInput" placeholder="You can search the songs" onkeyup="filterContent()">
             </div>
             <div id="searchResults" class="search-dropdown"></div>
         </div>
